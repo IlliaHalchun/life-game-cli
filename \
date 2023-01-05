@@ -1,0 +1,6 @@
+import { IRawData } from "../common/rawData.type";
+
+export interface IHistoryModel {
+    push(data: IRawData): boolean;
+    pop(): IRawData;
+}
