@@ -5,16 +5,19 @@ import { ENGINE_TYPES, MODEL_TYPES, MAIN_TYPES, VIEW_TYPES } from "./types";
 
 import "reflect-metadata";
 import { HistoryModel, IHistoryModel } from "./model/data_layer/history.model";
-import { ILogger, NullLogger } from "./logger/logger.service";
+import { DebugLogger, ILogger, NullLogger } from "./logger/logger.service";
 import { EngineService, IEngineService } from "./engine/engine.service";
 import { IStateModel, StateModel } from "./model/data_layer/state.model";
-import { BufferModel, IBufferModel } from "./model/data_layer/buffer.model";
 import { DataManager, IDataManager } from "./model/data.manager";
 import { IScreen, Screen } from "./view/screen.view";
 import {
     EngineController,
     IEngineController,
 } from "./engine/engine.controller";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers"
+
+const argv = yargs(hideBin(process.argv)).argv;
 
 const mainContainer = new Container({
     defaultScope: "Singleton",
@@ -29,11 +32,15 @@ mainContainer
     .to(EngineController);
 
 mainContainer.bind<IApp>(MAIN_TYPES.App).to(App);
-mainContainer.bind<ILogger>(MAIN_TYPES.Logger).to(NullLogger);
+//@ts-ignore
+if (!argv.debug) {
+    mainContainer.bind<ILogger>(MAIN_TYPES.Logger).to(NullLogger);
+} else {
+    mainContainer.bind<ILogger>(MAIN_TYPES.Logger).to(DebugLogger);
+}
 
 mainContainer.bind<IHistoryModel>(MODEL_TYPES.HistoryModel).to(HistoryModel);
 mainContainer.bind<IStateModel>(MODEL_TYPES.StateModel).to(StateModel);
-mainContainer.bind<IBufferModel>(MODEL_TYPES.BufferModel).to(BufferModel);
 mainContainer.bind<IDataManager>(MODEL_TYPES.DataManager).to(DataManager);
 
 mainContainer.bind<IScreen>(VIEW_TYPES.Screen).to(Screen);

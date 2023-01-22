@@ -1,10 +1,12 @@
 import * as blessed from "blessed";
+import {IPosition} from "../../common/position.type";
 import { IScreen } from "../screen.view";
 import { IBinding } from "./binding.interface";
 
 export abstract class StateElement {
-    private readonly _element: blessed.Widgets.BlessedElement;
-    private readonly _settings: blessed.Widgets.BoxOptions = {
+    protected origin: IScreen;
+    private readonly _element: blessed.Widgets.BoxElement;
+    private readonly settings: blessed.Widgets.BoxOptions = {
         top: "center",
         left: "center",
         width: "90%",
@@ -22,12 +24,19 @@ export abstract class StateElement {
     };
 
     constructor(origin: IScreen) {
-        this._element = blessed.box(this._settings);
+        this.origin = origin;
+        this._element = blessed.box(this.settings);
     }
 
     render() {
         this._element.render();
     }
+
+    getElementSize(): IPosition {
+        return { x: +this._element.width - 2, y: +this._element.height - 2 }
+    }
+
+    abstract bootstrap(): void;
 
     get element() {
         return this._element;
@@ -35,7 +44,7 @@ export abstract class StateElement {
 
     protected bind(bindings: IBinding[]) {
         for (const binding of bindings) {
-            this._element.key(binding.keys, binding.callback);
+            this._element.key(binding.keys, binding.callback.bind(this));
         }
     }
 }

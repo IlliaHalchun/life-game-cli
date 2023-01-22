@@ -1,27 +1,35 @@
 import { injectable } from "inversify";
+
 import { IRawData } from "../../common/rawData.type";
 import "reflect-metadata";
 
 export interface IHistoryModel {
-    push(data: IRawData): boolean;
+    push(data: IRawData): IRawData;
     pop(): IRawData | null;
+    getLast(): IRawData | null;
     clear(): void;
 }
 
 @injectable()
 export class HistoryModel implements IHistoryModel {
-    private _history: IRawData[] = [];
+    private history: IRawData[] = [];
+    private maxAmountOfSnapshots: number = 100;
 
-    push(data: IRawData): boolean {
-        this._history.push(data);
-        return true;
+    push(data: IRawData): IRawData {
+        if(this.history.length > this.maxAmountOfSnapshots) this.history.shift();
+        this.history.push(data);
+        return data;
     }
 
     pop(): IRawData | null {
-        return this._history.pop() ?? null;
+        return this.history.pop() ?? null;
+    }
+
+    getLast(): IRawData | null {
+        return this.history[this.history.length - 1] ?? null;
     }
 
     clear(): void {
-        this._history = [];
+        this.history = [];
     }
 }

@@ -5,12 +5,13 @@ import { MODEL_TYPES, MAIN_TYPES } from "../types";
 import { IHistoryModel } from "../model/data_layer/history.model";
 import { ILogger } from "../logger/logger.service";
 import { IStateModel } from "../model/data_layer/state.model";
-import { IBufferModel } from "../model/data_layer/buffer.model";
 
 export interface IDataManager {
     setState(data: IRawData): IRawData;
     getState(): IRawData;
-    getPrevState(): IRawData | null;
+    pushToHistory(data: IRawData): IRawData;
+    popFromHistory(): IRawData | null;
+    getFromHistory(): IRawData | null;
     clear(): void;
 }
 
@@ -19,25 +20,32 @@ export class DataManager implements IDataManager {
     constructor(
         @inject(MODEL_TYPES.HistoryModel) private HistoryModel: IHistoryModel,
         @inject(MODEL_TYPES.StateModel) private StateModel: IStateModel,
-        @inject(MODEL_TYPES.BufferModel) private BufferModel: IBufferModel,
         @inject(MAIN_TYPES.Logger) private Logger: ILogger
-    ) {}
+    ) {
+        this.Logger.log("Model Manager started")
+    }
+
+    pushToHistory(data: IRawData): IRawData {
+        return this.HistoryModel.push(data);
+    }
+
+    popFromHistory(): IRawData | null {
+        return this.HistoryModel.pop() ?? null;
+    }
+
+    getFromHistory(): IRawData | null {
+        return this.HistoryModel.getLast();
+    }
 
     setState(data: IRawData): IRawData {
-        const currentState = this.StateModel.getState();
-        this.HistoryModel.push(currentState);
         this.StateModel.setState(data);
         return data;
     }
 
     getState(): IRawData {
-        return this.StateModel.getState();
-    }
-
-    getPrevState(): IRawData | null {
-        const prevState = this.HistoryModel.pop() ?? null;
-        if (prevState) this.BufferModel.push(prevState);
-        return prevState;
+        const data = this.StateModel.getState();
+        if(data === null) throw new Error("Data was not bootstrapped");
+        return data;
     }
 
     clear(): void {

@@ -1,32 +1,60 @@
 import { inject, injectable } from "inversify";
 import { IRawData } from "../common/rawData.type";
-import { ENGINE_TYPES } from "../types";
+
+import { ENGINE_TYPES, MAIN_TYPES } from "../types";
 import { IEngineService } from "./engine.service";
 import "reflect-metadata";
+import {ILogger} from "../logger/logger.service";
+import {IPosition} from "../common/position.type";
 
 export interface IEngineController {
-    nextFrame(): IRawData;
+    bootstrap(sizes: IPosition): IRawData;
+    nextFrame(): IRawData | null;
     prevFrame(): IRawData | null;
-    build(x: number, y: number): IRawData;
+    getCurrentData(): IRawData;
+    setRandomField(): IRawData;
+    setEmptyField(): IRawData;
+    toggleChangeState(x: number, y: number): IRawData;
 }
 
 @injectable()
 export class EngineController implements IEngineController {
     constructor(
         @inject(ENGINE_TYPES.EngineService)
-        private EngineService: IEngineService
-    ) {}
+        private EngineService: IEngineService,
+        @inject(MAIN_TYPES.Logger) private Logger: ILogger
+    ) {
+        this.Logger.log("Engine Controller started")
+    }
 
-    nextFrame(): IRawData {
-        return this.EngineService.nextTick();
+    bootstrap(sizes: IPosition): IRawData {
+        this.EngineService.setSize(sizes);
+        return this.EngineService.bootstrap();
+    }
+
+    nextFrame(): IRawData | null{
+        const result = this.EngineService.nextTick();
+        return result;
     }
 
     prevFrame(): IRawData | null {
-        return this.EngineService.prevTick();
+        const result = this.EngineService.prevTick();
+        return result;
     }
 
-    build(x: number, y: number): IRawData {
-        this.EngineService.setSize(x, y);
+    getCurrentData(): IRawData {
+        return this.EngineService.getCurrentData();
+    }
+
+    toggleChangeState(x: number, y: number): IRawData {
+        return this.EngineService.toggleChangeState(x, y);
+    }
+
+    setRandomField(): IRawData {
+        return this.EngineService.setRandomData();
+    }
+
+    setEmptyField(): IRawData {
         return this.EngineService.setBaseData();
     }
 }
