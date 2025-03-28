@@ -1,14 +1,13 @@
 # 🎮 life-game-cli
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-99%25-blue)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/github/license/IlliaHalchun/life-game-cli)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/IlliaHalchun/life-game-cli?style=social)](https://github.com/IlliaHalchun/life-game-cli/stargazers)
 
 > A beautiful terminal-based implementation of Conway's Game of Life, built with TypeScript.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/IlliaHalchun/life-game-cli/main/demo.gif" alt="Life Game CLI Demo" width="600">
-</p>
+
+<img src="https://github.com/IlliaHalchun/life-game-cli/blob/origin/demo.gif" alt="Life Game CLI Demo" width="600">
+
 
 ## ✨ Features
 
