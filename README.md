@@ -32,7 +32,7 @@ The game takes place on a grid of cells, each of which can be alive or dead. The
 git clone https://github.com/IlliaHalchun/life-game-cli.git
 cd life-game-cli
 npm install
-npm run build
+npm run
 ```
 
 ## ⌨️ Controls
@@ -60,8 +60,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - John Conway for creating the Game of Life
 - The TypeScript team for an amazing language
 
----
-
-<p align="center">
-  Made with ❤️ by <a href="https://github.com/IlliaHalchun">Illia Halchun</a>
-</p>
+Made with ❤️ by <a href="https://github.com/IlliaHalchun">Illia Halchun</a>
