@@ -6,7 +6,7 @@
 > A beautiful terminal-based implementation of Conway's Game of Life, built with TypeScript.
 
 
-<img src="https://github.com/IlliaHalchun/life-game-cli/blob/origin/demo.gif" alt="Life Game CLI Demo" width="600">
+<img src="https://github.com/IlliaHalchun/life-game-cli/demo.gif" alt="Life Game CLI Demo" width="600">
 
 
 ## ✨ Features
